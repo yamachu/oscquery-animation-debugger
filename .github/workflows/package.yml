@@ -7,7 +7,7 @@ on:
       - "v*"
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build-packages:
@@ -67,4 +67,14 @@ jobs:
             Artifacts/*.unitypackage
             Artifacts/*.zip
             Artifacts/*.sha256.txt
-            Artifacts/vpm-index-snippet.json
+
+      - name: Upload assets to GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v3
+        with:
+          files: |
+            Artifacts/*.unitypackage
+            Artifacts/*.zip
+            Artifacts/*.sha256.txt
+          fail_on_unmatched_files: true
+          generate_release_notes: true
