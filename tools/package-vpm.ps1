@@ -55,19 +55,7 @@ $hash = (Get-FileHash -LiteralPath $zipPath -Algorithm SHA256).Hash.ToLowerInvar
 $hashFile = Join-Path $artifactsDir "$zipFileName.sha256.txt"
 Set-Content -LiteralPath $hashFile -Value $hash
 
-$snippetPath = Join-Path $artifactsDir 'vpm-index-snippet.json'
-$snippet = @"
-{
-  "name": "$packageName",
-  "version": "$packageVersion",
-  "url": "https://RELEASE_URL_PLACEHOLDER/$zipFileName",
-  "zipSHA256": "$hash"
-}
-"@
-Set-Content -LiteralPath $snippetPath -Value $snippet
-
 Remove-Item -LiteralPath $tempRoot -Recurse -Force
 
 Write-Host "Created VPM zip: $zipPath"
 Write-Host "SHA256: $hash"
-Write-Host "Index snippet: $snippetPath"
