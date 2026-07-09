@@ -108,7 +108,11 @@ InitTestScene*.unity*
 # Ignore VRC Avatar project base files
 /[Pp]ackages/*
 /[Aa]ssets/*
-!/Assets/.gitkeep
+!/[Aa]ssets/.gitkeep
 
 # Keep lock files for restoring package state
 !/[Pp]ackages/*.json
+
+# Track this projects
+!/[Aa]ssets/dev.yamachu.oscquery-animation-debugger
+!/[Aa]ssets/*.config
