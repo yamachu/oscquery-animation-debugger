@@ -7,8 +7,5 @@
   "author": {
     "name": "yamachu",
     "url": "https://github.com/yamachu/oscquery-animation-debugger"
-  },
-  "vpmDependencies": {
-    "com.github-glitchenzo.nugetforunity": "^4.5.0"
   }
 }
