@@ -42,16 +42,16 @@ public class LyumaAv3RuntimeDriver : IAvatarParameterDriver
 
                 if (_av3AnimatorField == null)
                 {
-                    Debug.LogError("[OSCQuery Bridge] LyumaAv3Runtime の animator フィールド/プロパティが見つかりません。");
+                    Debug.LogError("[OSCQuery Animation Debugger] LyumaAv3Runtime の animator フィールド/プロパティが見つかりません。");
                 }
                 else
                 {
-                    Debug.Log($"[OSCQuery Bridge] Av3Emulatorを検知しました。animator={_av3AnimatorField.Name} をキャッシュしました。");
+                    Debug.Log($"[OSCQuery Animation Debugger] Av3Emulatorを検知しました。animator={_av3AnimatorField.Name} をキャッシュしました。");
                 }
             }
             else
             {
-                Debug.LogWarning("[OSCQuery Bridge] LyumaAv3Runtimeが見つかりません。Av3Emulatorがインストールされているか確認してください。");
+                Debug.LogWarning("[OSCQuery Animation Debugger] LyumaAv3Runtimeが見つかりません。Av3Emulatorがインストールされているか確認してください。");
                 return false;
             }
         }
@@ -62,7 +62,7 @@ public class LyumaAv3RuntimeDriver : IAvatarParameterDriver
             _av3RuntimeInstance = FindRuntimeOnSameAvatarRoot();
             if (_av3RuntimeInstance != null)
             {
-                Debug.Log("[OSCQuery Bridge] 実行中のアバター（LyumaAv3Runtime）を捕捉しました。");
+                Debug.Log("[OSCQuery Animation Debugger] 実行中のアバター（LyumaAv3Runtime）を捕捉しました。");
                 IsReady = true;
                 return true;
             }
@@ -94,7 +94,7 @@ public class LyumaAv3RuntimeDriver : IAvatarParameterDriver
                 applied = true;
                 if (_bridge.VerboseReceiveLogging)
                 {
-                    Debug.Log($"[OSCQuery Bridge] Runtime Float適用: {paramName} = {fVal} target={GetRuntimeName(runtime)}");
+                    Debug.Log($"[OSCQuery Animation Debugger] Runtime Float適用: {paramName} = {fVal} target={GetRuntimeName(runtime)}");
                 }
             }
 
@@ -105,7 +105,7 @@ public class LyumaAv3RuntimeDriver : IAvatarParameterDriver
                 applied = true;
                 if (_bridge.VerboseReceiveLogging)
                 {
-                    Debug.Log($"[OSCQuery Bridge] Runtime Int適用: {paramName} = {iVal} target={GetRuntimeName(runtime)}");
+                    Debug.Log($"[OSCQuery Animation Debugger] Runtime Int適用: {paramName} = {iVal} target={GetRuntimeName(runtime)}");
                 }
             }
 
@@ -116,7 +116,7 @@ public class LyumaAv3RuntimeDriver : IAvatarParameterDriver
                 applied = true;
                 if (_bridge.VerboseReceiveLogging)
                 {
-                    Debug.Log($"[OSCQuery Bridge] Runtime Bool適用: {paramName} = {bVal} target={GetRuntimeName(runtime)}");
+                    Debug.Log($"[OSCQuery Animation Debugger] Runtime Bool適用: {paramName} = {bVal} target={GetRuntimeName(runtime)}");
                 }
             }
         }
@@ -189,7 +189,7 @@ public class LyumaAv3RuntimeDriver : IAvatarParameterDriver
             }
             catch (Exception ex)
             {
-                Debug.LogWarning($"[OSCQuery Bridge] Runtime animator取得失敗: {ex.Message}");
+                Debug.LogWarning($"[OSCQuery Animation Debugger] Runtime animator取得失敗: {ex.Message}");
             }
         }
         return null;
@@ -212,7 +212,7 @@ public class LyumaAv3RuntimeDriver : IAvatarParameterDriver
 
             if (_bridge.VerboseReceiveLogging)
             {
-                Debug.Log($"[OSCQuery Bridge] Runtimeパラメーター登録: {paramName} ({paramType})");
+                Debug.Log($"[OSCQuery Animation Debugger] Runtimeパラメーター登録: {paramName} ({paramType})");
             }
         }
     }
@@ -451,12 +451,12 @@ public class LyumaAv3RuntimeDriver : IAvatarParameterDriver
             );
             if (field != null)
             {
-                Debug.Log($"[OSCQuery Bridge] animator フィールド '{fieldName}' を発見しました。");
+                Debug.Log($"[OSCQuery Animation Debugger] animator フィールド '{fieldName}' を発見しました。");
                 return field;
             }
         }
 
-        Debug.LogError($"[OSCQuery Bridge] LyumaAv3Runtime 内に animator フィールドが見つかりません。");
+        Debug.LogError($"[OSCQuery Animation Debugger] LyumaAv3Runtime 内に animator フィールドが見つかりません。");
         return null;
     }
 }

@@ -61,7 +61,7 @@ public class AnimatorParameterDriver : IAvatarParameterDriver
                     applied = true;
                     if (_bridge.VerboseReceiveLogging)
                     {
-                        Debug.Log($"[OSCQuery Bridge] マップ適用成功: parameter={paramName}, animator={targetAnimator.name}, rawValue={rawValue}");
+                        Debug.Log($"[OSCQuery Animation Debugger] マップ適用成功: parameter={paramName}, animator={targetAnimator.name}, rawValue={rawValue}");
                     }
                 }
             }
@@ -88,7 +88,7 @@ public class AnimatorParameterDriver : IAvatarParameterDriver
                 applied = true;
                 if (_bridge.VerboseReceiveLogging)
                 {
-                    Debug.Log($"[OSCQuery Bridge] 階層Animatorへ適用: animator={hierarchyAnimator.name}, parameter={paramName}, rawValue={rawValue}");
+                    Debug.Log($"[OSCQuery Animation Debugger] 階層Animatorへ適用: animator={hierarchyAnimator.name}, parameter={paramName}, rawValue={rawValue}");
                 }
             }
         }
@@ -154,7 +154,7 @@ public class AnimatorParameterDriver : IAvatarParameterDriver
         {
             if (_bridge.VerboseReceiveLogging && animator != null)
             {
-                Debug.Log($"[OSCQuery Bridge] Animatorをスキップ(Controllerなし): {animator.name}");
+                Debug.Log($"[OSCQuery Animation Debugger] Animatorをスキップ(Controllerなし): {animator.name}");
             }
             return;
         }
@@ -195,7 +195,7 @@ public class AnimatorParameterDriver : IAvatarParameterDriver
 
             if (_bridge.VerboseReceiveLogging)
             {
-                Debug.Log($"[OSCQuery Bridge] Animatorパラメーター登録: {param.name} ({param.type}) source={animator.name}");
+                Debug.Log($"[OSCQuery Animation Debugger] Animatorパラメーター登録: {param.name} ({param.type}) source={animator.name}");
             }
         }
     }
@@ -316,7 +316,7 @@ public class AnimatorParameterDriver : IAvatarParameterDriver
                         {
                             animator.SetFloat(paramName, fVal);
                             if (_bridge.VerboseReceiveLogging)
-                                Debug.Log($"[OSCQuery Bridge] Animator Float: {paramName} = {fVal}");
+                                Debug.Log($"[OSCQuery Animation Debugger] Animator Float: {paramName} = {fVal}");
                         }
                         break;
 
@@ -325,7 +325,7 @@ public class AnimatorParameterDriver : IAvatarParameterDriver
                         {
                             animator.SetInteger(paramName, iVal);
                             if (_bridge.VerboseReceiveLogging)
-                                Debug.Log($"[OSCQuery Bridge] Animator Int: {paramName} = {iVal}");
+                                Debug.Log($"[OSCQuery Animation Debugger] Animator Int: {paramName} = {iVal}");
                         }
                         break;
 
@@ -334,14 +334,14 @@ public class AnimatorParameterDriver : IAvatarParameterDriver
                         {
                             animator.SetBool(paramName, bVal);
                             if (_bridge.VerboseReceiveLogging)
-                                Debug.Log($"[OSCQuery Bridge] Animator Bool: {paramName} = {bVal}");
+                                Debug.Log($"[OSCQuery Animation Debugger] Animator Bool: {paramName} = {bVal}");
                         }
                         break;
 
                     case AnimatorControllerParameterType.Trigger:
                         animator.SetTrigger(paramName);
                         if (_bridge.VerboseReceiveLogging)
-                            Debug.Log($"[OSCQuery Bridge] Animator Trigger: {paramName}");
+                            Debug.Log($"[OSCQuery Animation Debugger] Animator Trigger: {paramName}");
                         break;
                 }
                 break;
@@ -350,7 +350,7 @@ public class AnimatorParameterDriver : IAvatarParameterDriver
 
         if (!foundParameter && _bridge.VerboseReceiveLogging)
         {
-            Debug.LogWarning($"[OSCQuery Bridge] Animator parameter が見つかりません: {paramName}");
+            Debug.LogWarning($"[OSCQuery Animation Debugger] Animator parameter が見つかりません: {paramName}");
         }
 
         return foundParameter;

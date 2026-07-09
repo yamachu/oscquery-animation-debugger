@@ -12,7 +12,7 @@ public partial class OscQueryAnimationDebugger
     {
         if (!gameObject.activeInHierarchy)
         {
-            Debug.Log("[OSCQuery Bridge] 非アクティブなため初期化をスキップします。");
+            Debug.Log("[OSCQuery Animation Debugger] 非アクティブなため初期化をスキップします。");
             return false;
         }
 
@@ -24,7 +24,7 @@ public partial class OscQueryAnimationDebugger
             if (string.IsNullOrWhiteSpace(keyword)) continue;
             if (rootNameLower.Contains(keyword.ToLowerInvariant()))
             {
-                Debug.Log($"[OSCQuery Bridge] 複製アバター({root.name})を検出したため無効化します。");
+                Debug.Log($"[OSCQuery Animation Debugger] 複製アバター({root.name})を検出したため無効化します。");
                 return false;
             }
         }
@@ -32,14 +32,14 @@ public partial class OscQueryAnimationDebugger
         int mirrorReflectionLayer = LayerMask.NameToLayer("MirrorReflection");
         if (mirrorReflectionLayer >= 0 && root.gameObject.layer == mirrorReflectionLayer)
         {
-            Debug.Log($"[OSCQuery Bridge] MirrorReflectionレイヤーのため無効化します: {root.name}");
+            Debug.Log($"[OSCQuery Animation Debugger] MirrorReflectionレイヤーのため無効化します: {root.name}");
             return false;
         }
 
         int rootId = root.GetInstanceID();
         if (s_activeAvatarRootId.HasValue && s_activeAvatarRootId.Value != rootId)
         {
-            Debug.Log($"[OSCQuery Bridge] 既に別アバターで起動済みのため無効化します: {root.name}");
+            Debug.Log($"[OSCQuery Animation Debugger] 既に別アバターで起動済みのため無効化します: {root.name}");
             return false;
         }
 

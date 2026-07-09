@@ -29,7 +29,7 @@ public partial class OscQueryAnimationDebugger : MonoBehaviour
     private float driverInitializationTimeoutSeconds = 30f;
 
     [Header("OSCQuery 設定")]
-    [SerializeField] private string serviceName = "ESP32-VRC-Bridge";
+    [SerializeField] private string serviceName = "VRC-Client-DUMMY";
     [SerializeField] private int tcpPort = 9001;
     [SerializeField] private int oscPort = 9010;
     [SerializeField] private float discoveryRefreshIntervalSeconds = 5f;
@@ -117,31 +117,31 @@ public partial class OscQueryAnimationDebugger : MonoBehaviour
                 _drivers.Add(new AnimatorParameterDriver());
                 _drivers.Add(new LyumaAv3RuntimeDriver());
                 _drivers.Add(new CustomComponentFieldDriver());
-                Debug.Log("[OSCQuery Bridge] Autoモード: 全ドライバーを有効化");
+                Debug.Log("[OSCQuery Animation Debugger] Autoモード: 全ドライバーを有効化");
                 break;
 
             case ParameterDriverMode.Av3Emulator:
                 _drivers.Add(new AnimatorParameterDriver());
                 _drivers.Add(new LyumaAv3RuntimeDriver());
                 _drivers.Add(new CustomComponentFieldDriver());
-                Debug.Log("[OSCQuery Bridge] Av3Emulatorモード");
+                Debug.Log("[OSCQuery Animation Debugger] Av3Emulatorモード");
                 break;
 
             case ParameterDriverMode.AnimatorOnly:
                 _drivers.Add(new AnimatorParameterDriver());
                 _drivers.Add(new CustomComponentFieldDriver());
-                Debug.Log("[OSCQuery Bridge] AnimatorOnlyモード");
+                Debug.Log("[OSCQuery Animation Debugger] AnimatorOnlyモード");
                 break;
 
             case ParameterDriverMode.GestureManager:
                 _drivers.Add(new GestureManagerDriver());
                 _drivers.Add(new AnimatorParameterDriver());
                 _drivers.Add(new CustomComponentFieldDriver());
-                Debug.Log("[OSCQuery Bridge] GestureManagerモード");
+                Debug.Log("[OSCQuery Animation Debugger] GestureManagerモード");
                 break;
         }
 
-        Debug.Log($"[OSCQuery Bridge] {_drivers.Count} 個のドライバーを初期化します");
+        Debug.Log($"[OSCQuery Animation Debugger] {_drivers.Count} 個のドライバーを初期化します");
     }
 
     // --- ドライバー向け公開プロパティ ---
@@ -160,7 +160,7 @@ public partial class OscQueryAnimationDebugger : MonoBehaviour
     {
         if (oscPort <= 0 || oscPort > 65535)
         {
-            Debug.LogError($"[OSCQuery Bridge] 無効な UDP ポートです: {oscPort}");
+            Debug.LogError($"[OSCQuery Animation Debugger] 無効な UDP ポートです: {oscPort}");
             return false;
         }
 
@@ -229,7 +229,7 @@ public partial class OscQueryAnimationDebugger : MonoBehaviour
                     }
                     else
                     {
-                        Debug.Log($"[OSCQuery Bridge] ドライバー準備完了: {driver.DisplayName}");
+                        Debug.Log($"[OSCQuery Animation Debugger] ドライバー準備完了: {driver.DisplayName}");
                         // Trigger endpoint update when a driver becomes ready
                         UpdateAnimatorEndpoints();
                     }
@@ -244,7 +244,7 @@ public partial class OscQueryAnimationDebugger : MonoBehaviour
                 {
                     if (!driver.IsReady)
                     {
-                        Debug.LogWarning($"[OSCQuery Bridge] タイムアウト: ドライバー '{driver.DisplayName}' が {driverInitializationTimeoutSeconds}秒以内に準備完了しませんでした");
+                        Debug.LogWarning($"[OSCQuery Animation Debugger] タイムアウト: ドライバー '{driver.DisplayName}' が {driverInitializationTimeoutSeconds}秒以内に準備完了しませんでした");
                     }
                     else
                     {
@@ -253,7 +253,7 @@ public partial class OscQueryAnimationDebugger : MonoBehaviour
                 }
                 if (!anyReady)
                 {
-                    Debug.LogWarning("[OSCQuery Bridge] パラメーター送信元が見つかりませんでした。Av3Emulator、Gesture Manager、RuntimeAnimatorControllerを持つAnimator、またはndmf/Modular Avatarの'Apply on Play'設定がサポートされています。");
+                    Debug.LogWarning("[OSCQuery Animation Debugger] パラメーター送信元が見つかりませんでした。Av3Emulator、Gesture Manager、RuntimeAnimatorControllerを持つAnimator、またはndmf/Modular Avatarの'Apply on Play'設定がサポートされています。");
                 }
             }
         }
@@ -311,11 +311,11 @@ public partial class OscQueryAnimationDebugger : MonoBehaviour
             }
             catch (Exception ex)
             {
-                Debug.LogWarning($"[OSCQuery Bridge] HttpListener 強制クローズ失敗: {ex.Message}");
+                Debug.LogWarning($"[OSCQuery Animation Debugger] HttpListener 強制クローズ失敗: {ex.Message}");
             }
 
             _oscQueryService.Dispose();
-            Debug.Log("[OSCQuery Bridge] サービスを停止しました。");
+            Debug.Log("[OSCQuery Animation Debugger] サービスを停止しました。");
         }
     }
 
@@ -361,7 +361,7 @@ public partial class OscQueryAnimationDebugger : MonoBehaviour
                             {
                                 httpListener.Stop();
                                 httpListener.Close();
-                                Debug.Log("[OSCQuery Bridge] HttpListener を強制クローズしました (TCP:" + tcpPort + ")");
+                                Debug.Log("[OSCQuery Animation Debugger] HttpListener を強制クローズしました (TCP:" + tcpPort + ")");
                             }
                         }
                     }
@@ -370,7 +370,7 @@ public partial class OscQueryAnimationDebugger : MonoBehaviour
         }
         catch (Exception ex)
         {
-            Debug.LogWarning($"[OSCQuery Bridge] HttpListener リフレクションアクセス失敗（問題なし）: {ex.Message}");
+            Debug.LogWarning($"[OSCQuery Animation Debugger] HttpListener リフレクションアクセス失敗（問題なし）: {ex.Message}");
         }
     }
 }

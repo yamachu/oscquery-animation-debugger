@@ -15,11 +15,11 @@ public partial class OscQueryAnimationDebugger
             _oscRunning = true;
             _oscReceiveThread = new Thread(OscReceiveLoop) { IsBackground = true, Name = "OSCReceiveThread" };
             _oscReceiveThread.Start();
-            Debug.Log($"[OSCQuery Bridge] OSC UDP 受信開始: udp={oscPort}, tcp={tcpPort}");
+            Debug.Log($"[OSCQuery Animation Debugger] OSC UDP 受信開始: udp={oscPort}, tcp={tcpPort}");
         }
         catch (Exception e)
         {
-            Debug.LogError($"[OSCQuery Bridge] OSC UDP 受信の起動に失敗しました: {e.Message}");
+            Debug.LogError($"[OSCQuery Animation Debugger] OSC UDP 受信の起動に失敗しました: {e.Message}");
         }
     }
 
@@ -33,14 +33,14 @@ public partial class OscQueryAnimationDebugger
                 byte[] data = _oscUdpClient.Receive(ref endpoint);
                 if (verboseReceiveLogging)
                 {
-                    Debug.Log($"[OSCQuery Bridge] UDP受信: from={endpoint.Address}:{endpoint.Port}, bytes={data.Length}");
+                    Debug.Log($"[OSCQuery Animation Debugger] UDP受信: from={endpoint.Address}:{endpoint.Port}, bytes={data.Length}");
                 }
 
                 if (TryParseOscPacket(data, out string path, out string value))
                 {
                     if (verboseReceiveLogging)
                     {
-                        Debug.Log($"[OSCQuery Bridge] OSCパース成功: path={path}, value={value}");
+                        Debug.Log($"[OSCQuery Animation Debugger] OSCパース成功: path={path}, value={value}");
                     }
 
                     lock (_oscQueueLock)
@@ -50,7 +50,7 @@ public partial class OscQueryAnimationDebugger
                 }
                 else if (verboseReceiveLogging)
                 {
-                    Debug.LogWarning($"[OSCQuery Bridge] OSCパース失敗: {GetPacketPreview(data)}");
+                    Debug.LogWarning($"[OSCQuery Animation Debugger] OSCパース失敗: {GetPacketPreview(data)}");
                 }
             }
             catch (SocketException)
@@ -61,7 +61,7 @@ public partial class OscQueryAnimationDebugger
             catch (Exception e)
             {
                 if (_oscRunning)
-                    Debug.LogWarning($"[OSCQuery Bridge] OSC 受信エラー: {e.Message}");
+                    Debug.LogWarning($"[OSCQuery Animation Debugger] OSC 受信エラー: {e.Message}");
             }
         }
     }

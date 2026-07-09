@@ -42,7 +42,7 @@ public class CustomComponentFieldDriver : IAvatarParameterDriver
                             field.SetValue(component, fVal);
                             if (_bridge.VerboseReceiveLogging)
                             {
-                                Debug.Log($"[OSCQuery Bridge] カスタムフィールド適用（Float）: {component.GetType().Name}.{paramName} = {fVal}");
+                                Debug.Log($"[OSCQuery Animation Debugger] カスタムフィールド適用（Float）: {component.GetType().Name}.{paramName} = {fVal}");
                             }
                             return true;
                         }
@@ -54,7 +54,7 @@ public class CustomComponentFieldDriver : IAvatarParameterDriver
                             field.SetValue(component, iVal);
                             if (_bridge.VerboseReceiveLogging)
                             {
-                                Debug.Log($"[OSCQuery Bridge] カスタムフィールド適用（Int）: {component.GetType().Name}.{paramName} = {iVal}");
+                                Debug.Log($"[OSCQuery Animation Debugger] カスタムフィールド適用（Int）: {component.GetType().Name}.{paramName} = {iVal}");
                             }
                             return true;
                         }
@@ -66,7 +66,7 @@ public class CustomComponentFieldDriver : IAvatarParameterDriver
                             field.SetValue(component, bVal);
                             if (_bridge.VerboseReceiveLogging)
                             {
-                                Debug.Log($"[OSCQuery Bridge] カスタムフィールド適用（Bool）: {component.GetType().Name}.{paramName} = {bVal}");
+                                Debug.Log($"[OSCQuery Animation Debugger] カスタムフィールド適用（Bool）: {component.GetType().Name}.{paramName} = {bVal}");
                             }
                             return true;
                         }
@@ -74,7 +74,7 @@ public class CustomComponentFieldDriver : IAvatarParameterDriver
                 }
                 catch (Exception ex)
                 {
-                    Debug.LogError($"[OSCQuery Bridge] カスタムフィールド値設定失敗: {paramName} - {ex.Message}");
+                    Debug.LogError($"[OSCQuery Animation Debugger] カスタムフィールド値設定失敗: {paramName} - {ex.Message}");
                     return true; // Handled (even if failed)
                 }
             }
@@ -104,7 +104,7 @@ public class CustomComponentFieldDriver : IAvatarParameterDriver
             {
                 if (_loggedMissingCustomComponentTypes.Add(componentName))
                 {
-                    Debug.LogWarning($"[OSCQuery Bridge] カスタムコンポーネント '{componentName}' が見つかりません。クラス名を確認してください。");
+                    Debug.LogWarning($"[OSCQuery Animation Debugger] カスタムコンポーネント '{componentName}' が見つかりません。クラス名を確認してください。");
                 }
                 continue;
             }
@@ -115,7 +115,7 @@ public class CustomComponentFieldDriver : IAvatarParameterDriver
             {
                 if (_loggedMissingCustomComponentInstances.Add(componentName))
                 {
-                    Debug.LogWarning($"[OSCQuery Bridge] '{componentName}' はアセンブリに存在しますが、シーン内に配置されていません");
+                    Debug.LogWarning($"[OSCQuery Animation Debugger] '{componentName}' はアセンブリに存在しますが、シーン内に配置されていません");
                 }
                 continue;
             }
@@ -148,7 +148,7 @@ public class CustomComponentFieldDriver : IAvatarParameterDriver
 
                 if (_bridge.VerboseReceiveLogging)
                 {
-                    Debug.Log($"[OSCQuery Bridge] カスタムコンポーネントフィールド登録: {field.Name} ({field.FieldType.Name})");
+                    Debug.Log($"[OSCQuery Animation Debugger] カスタムコンポーネントフィールド登録: {field.Name} ({field.FieldType.Name})");
                 }
             }
 

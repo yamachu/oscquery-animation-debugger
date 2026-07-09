@@ -35,7 +35,7 @@ public class GestureManagerDriver : IAvatarParameterDriver
             {
                 if (_bridge.VerboseReceiveLogging)
                 {
-                    Debug.Log("[OSCQuery Bridge] GestureManager type not found (GM not installed).");
+                    Debug.Log("[OSCQuery Animation Debugger] GestureManager type not found (GM not installed).");
                 }
                 return false;
             }
@@ -43,7 +43,7 @@ public class GestureManagerDriver : IAvatarParameterDriver
             _moduleVrc3Type = ResolveTypeFromLoadedAssemblies("BlackStartX.GestureManager.Editor.Modules.Vrc3.ModuleVrc3");
             if (_moduleVrc3Type == null)
             {
-                Debug.LogWarning("[OSCQuery Bridge] ModuleVrc3 type not found.");
+                Debug.LogWarning("[OSCQuery Animation Debugger] ModuleVrc3 type not found.");
                 return false;
             }
 
@@ -80,7 +80,7 @@ public class GestureManagerDriver : IAvatarParameterDriver
             BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
             _paramsField = _moduleVrc3Type.GetField("Params", flags);
 
-            Debug.Log("[OSCQuery Bridge] Gesture Manager types resolved.");
+            Debug.Log("[OSCQuery Animation Debugger] Gesture Manager types resolved.");
         }
 
         // Try to find GM instance controlling our avatar
@@ -89,13 +89,13 @@ public class GestureManagerDriver : IAvatarParameterDriver
             _moduleInstance = FindGestureManagerModuleForAvatar();
             if (_moduleInstance != null)
             {
-                Debug.Log("[OSCQuery Bridge] Gesture Manager (ModuleVrc3) を検知し、アバターに接続しました。");
+                Debug.Log("[OSCQuery Animation Debugger] Gesture Manager (ModuleVrc3) を検知し、アバターに接続しました。");
                 IsReady = true;
 
                 // Check for OSC port conflict
                 if (!_oscPortConflictWarned && _bridge.OscPort == 9000)
                 {
-                    Debug.LogWarning("[OSCQuery Bridge] OSC port 9000 is in use. If Gesture Manager's built-in OSC module (GM 3.8+) is enabled, this may cause conflicts.");
+                    Debug.LogWarning("[OSCQuery Animation Debugger] OSC port 9000 is in use. If Gesture Manager's built-in OSC module (GM 3.8+) is enabled, this may cause conflicts.");
                     _oscPortConflictWarned = true;
                 }
 
@@ -157,14 +157,14 @@ public class GestureManagerDriver : IAvatarParameterDriver
 
             if (_bridge.VerboseReceiveLogging)
             {
-                Debug.Log($"[OSCQuery Bridge] GM param applied: {paramName} = {rawValue} (float: {floatValue})");
+                Debug.Log($"[OSCQuery Animation Debugger] GM param applied: {paramName} = {rawValue} (float: {floatValue})");
             }
 
             return true;
         }
         catch (Exception ex)
         {
-            Debug.LogWarning($"[OSCQuery Bridge] GM Set failed for {paramName}: {ex.Message}");
+            Debug.LogWarning($"[OSCQuery Animation Debugger] GM Set failed for {paramName}: {ex.Message}");
             return false;
         }
     }
@@ -237,7 +237,7 @@ public class GestureManagerDriver : IAvatarParameterDriver
         }
         catch (Exception ex)
         {
-            Debug.LogWarning($"[OSCQuery Bridge] GM parameter enumeration failed: {ex.Message}");
+            Debug.LogWarning($"[OSCQuery Animation Debugger] GM parameter enumeration failed: {ex.Message}");
             IsReady = false;
             return new List<DriverParameterInfo>();
         }
@@ -292,7 +292,7 @@ public class GestureManagerDriver : IAvatarParameterDriver
         }
         catch (Exception ex)
         {
-            Debug.LogWarning($"[OSCQuery Bridge] GM read failed for {paramName}: {ex.Message}");
+            Debug.LogWarning($"[OSCQuery Animation Debugger] GM read failed for {paramName}: {ex.Message}");
             return false;
         }
     }

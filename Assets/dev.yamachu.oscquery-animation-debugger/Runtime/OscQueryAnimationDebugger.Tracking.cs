@@ -49,7 +49,7 @@ public partial class OscQueryAnimationDebugger
                 }
                 catch (Exception ex)
                 {
-                    Debug.LogWarning($"[OSCQuery Bridge] エンドポイント登録失敗: {oscPath} - {ex.Message}");
+                    Debug.LogWarning($"[OSCQuery Animation Debugger] エンドポイント登録失敗: {oscPath} - {ex.Message}");
                 }
             }
         }
@@ -57,11 +57,11 @@ public partial class OscQueryAnimationDebugger
         if (_registeredEndpoints.Count != _lastRegisteredEndpointCount)
         {
             _lastRegisteredEndpointCount = _registeredEndpoints.Count;
-            Debug.Log($"[OSCQuery Bridge] {_registeredEndpoints.Count} 個のエンドポイントを登録しました");
+            Debug.Log($"[OSCQuery Animation Debugger] {_registeredEndpoints.Count} 個のエンドポイントを登録しました");
         }
         else if (verboseReceiveLogging)
         {
-            Debug.Log($"[OSCQuery Bridge] エンドポイント数に変化なし: {_registeredEndpoints.Count}");
+            Debug.Log($"[OSCQuery Animation Debugger] エンドポイント数に変化なし: {_registeredEndpoints.Count}");
         }
     }
 
@@ -96,7 +96,7 @@ public partial class OscQueryAnimationDebugger
 
         if (verboseReceiveLogging)
         {
-            Debug.Log($"[OSCQuery Bridge] エンドポイント登録: {oscPath} ({typeDesc}) source={sourceLabel}");
+            Debug.Log($"[OSCQuery Animation Debugger] エンドポイント登録: {oscPath} ({typeDesc}) source={sourceLabel}");
         }
     }
 }

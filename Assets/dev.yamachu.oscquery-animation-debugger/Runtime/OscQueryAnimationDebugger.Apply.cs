@@ -42,7 +42,7 @@ public partial class OscQueryAnimationDebugger
             _lastBroadcastValues[oscPath] = currentValue;
 
             if (verboseReceiveLogging)
-                Debug.Log($"[OSCQuery Bridge] 変化検知({driver.DisplayName}): {oscPath} = {currentValue}");
+                Debug.Log($"[OSCQuery Animation Debugger] 変化検知({driver.DisplayName}): {oscPath} = {currentValue}");
 
             byte[] packet = BuildOscPacketForParameter(oscPath, currentValue, paramInfo.Type);
             if (packet != null)
@@ -89,11 +89,11 @@ public partial class OscQueryAnimationDebugger
             {
                 _oscSendClient.Send(packet, packet.Length, kvpEndpoint.Value);
                 if (verboseReceiveLogging)
-                    Debug.Log($"[OSCQuery Bridge] OSC送信: {oscPath} = {currentValue} -> {kvpEndpoint.Key}");
+                    Debug.Log($"[OSCQuery Animation Debugger] OSC送信: {oscPath} = {currentValue} -> {kvpEndpoint.Key}");
             }
             catch (Exception ex)
             {
-                Debug.LogWarning($"[OSCQuery Bridge] OSC送信失敗 {kvpEndpoint.Key}: {ex.Message}");
+                Debug.LogWarning($"[OSCQuery Animation Debugger] OSC送信失敗 {kvpEndpoint.Key}: {ex.Message}");
             }
         }
     }
@@ -108,14 +108,14 @@ public partial class OscQueryAnimationDebugger
         {
             if (verboseReceiveLogging)
             {
-                Debug.LogWarning($"[OSCQuery Bridge] 未対応のOSCパスを受信: {oscPath}");
+                Debug.LogWarning($"[OSCQuery Animation Debugger] 未対応のOSCパスを受信: {oscPath}");
             }
             return;
         }
 
         if (verboseReceiveLogging)
         {
-            Debug.Log($"[OSCQuery Bridge] OSC値受信: parameter={paramName}, rawValue={rawValue}");
+            Debug.Log($"[OSCQuery Animation Debugger] OSC値受信: parameter={paramName}, rawValue={rawValue}");
         }
 
         // Try each driver in order (first-success semantics)
@@ -133,7 +133,7 @@ public partial class OscQueryAnimationDebugger
 
         if (!applied && verboseReceiveLogging)
         {
-            Debug.LogWarning($"[OSCQuery Bridge] パラメーター '{paramName}' を適用できるドライバーがありませんでした");
+            Debug.LogWarning($"[OSCQuery Animation Debugger] パラメーター '{paramName}' を適用できるドライバーがありませんでした");
         }
 
         // 受信値をキャッシュしてエコー送信を抑制する（無限ループ防止）
