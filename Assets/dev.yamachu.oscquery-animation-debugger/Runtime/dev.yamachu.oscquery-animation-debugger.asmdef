@@ -1,0 +1,6 @@
+{
+	"name": "dev.yamachu.oscquery-animation-debugger",
+	"references": [
+		"VRChat.OSCQuery"
+	]
+}
