@@ -4,6 +4,7 @@
   "displayName": "OSCQuery Animation Debugger",
   "description": "UnityEditor上でOSCQuery対応デバッグツールとAnimatorパラメーターを双方向同期するためのアセットです。",
   "unity": "2022.3",
+  "license": "MIT",
   "author": {
     "name": "yamachu",
     "url": "https://github.com/yamachu/oscquery-animation-debugger"
