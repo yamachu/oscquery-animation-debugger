@@ -116,3 +116,4 @@ InitTestScene*.unity*
 # Track this projects
 !/[Aa]ssets/dev.yamachu.oscquery-animation-debugger
 !/[Aa]ssets/*.config
+!/[Aa]ssets/Editor
