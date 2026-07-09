@@ -1,0 +1,63 @@
+# OSCQuery Animation Debugger 導入ガイド
+
+このドキュメントは、配布された unitypackage をプロジェクトに導入して使い始めるための手順です。
+
+## これは何をするツール？
+
+OSCQuery Animation Debugger は、OSCQuery 経由で受け取った値をアバターのパラメーターへ反映し、デバッグしやすくするためのコンポーネントです。
+
+主に次の環境で利用できます。
+
+- Lyuma Av3Emulator
+- VRC Gesture Manager
+- RuntimeAnimatorController を持つ Animator
+- ndmf / Modular Avatar（Apply on Play を使う構成）
+
+## 導入手順
+
+1. unitypackage をプロジェクトに Import します。
+2. NuGetForUnity が未導入なら、先に導入します。
+3. Project ウィンドウで Assets/dev.yamachu.oscquery-animation-debugger/packages.config を確認します。
+4. NuGetForUnity で packages.config を Restore し、依存パッケージを復元します。
+5. Console にコンパイルエラーが出ていないことを確認します。
+
+依存パッケージには少なくとも次が含まれます。
+
+- OscCore 1.0.5
+- VRChat.OSCQuery 0.0.7
+
+## 使い方（最短）
+
+1. デバッグ対象アバターのルート、または制御対象に近い GameObject に OscQueryAnimationDebugger を追加します。
+2. Play します。
+3. Inspector の Parameter Driver Mode を必要に応じて選択します。
+
+## Parameter Driver Mode の選び方
+
+- Auto（既定）
+	- Gesture Manager → Animator → Av3Emulator → Custom Components の順で試します。
+	- 迷ったらまずこれを使ってください。
+- Av3Emulator
+	- Animator → Av3Emulator → Custom Components の順で試します。
+	- Av3Emulator 中心で使う場合に向いています。
+- GestureManager
+	- Gesture Manager → Animator → Custom Components の順で試します。
+	- Gesture Manager での編集反映を優先したい場合に向いています。
+- AnimatorOnly
+	- Animator → Custom Components のみ使います。
+	- ほかのツール連携を避けたい場合に使います。
+
+複数ツールが同時に有効な場合は、選択モードの優先順で評価され、書き込みに成功したドライバーが使われます。
+
+## 動作確認チェックリスト
+
+- OscQueryAnimationDebugger コンポーネントを追加できる
+- Missing Script 警告が出ない
+- OscCore / VRC.OSCQuery 関連のコンパイルエラーがない
+
+## うまく動かないとき
+
+- NuGetForUnity で packages.config の Restore をやり直す
+- Parameter Driver Mode を Auto に戻して再確認する
+- Gesture Manager や Av3Emulator を使う場合は、それぞれが正常に動作しているか確認する
+- プロジェクトを再読み込みしてコンパイルを待つ
