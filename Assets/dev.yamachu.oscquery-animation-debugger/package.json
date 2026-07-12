@@ -1,6 +1,6 @@
 {
   "name": "dev.yamachu.oscquery-animation-debugger",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "displayName": "OSCQuery Animation Debugger",
   "description": "UnityEditor上でOSCQuery対応デバッグツールとAnimatorパラメーターを双方向同期するためのアセットです。",
   "unity": "2022.3",
