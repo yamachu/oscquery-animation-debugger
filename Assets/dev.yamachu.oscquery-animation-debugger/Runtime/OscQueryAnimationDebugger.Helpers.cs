@@ -1,49 +1,70 @@
 using System;
+using System.Globalization;
 using System.Text;
 using OscCore;
 using UnityEngine;
 
 public partial class OscQueryAnimationDebugger
 {
-    /// <summary>
-    /// OSCパケットをパースしてアドレスと最初の引数の文字列表現を返す
-    /// </summary>
-    internal static bool TryParseOscPacket(byte[] data, out string address, out string value)
+    internal readonly struct ParsedOscMessage
     {
-        address = null;
-        value = null;
+        public ParsedOscMessage(string address, object[] arguments)
+        {
+            Address = address;
+            Arguments = arguments;
+        }
+
+        public string Address { get; }
+        public object[] Arguments { get; }
+    }
+
+    /// <summary>
+    /// OSCパケットをパースしてアドレスと全ての型付き引数を返す
+    /// </summary>
+    internal static bool TryParseOscPacket(byte[] data, out ParsedOscMessage parsedMessage)
+    {
+        parsedMessage = default;
         if (data == null || data.Length < 4) return false;
 
         try
         {
             OscPacket packet = OscPacket.Read(data, 0, data.Length, null, null);
             OscMessage message = packet as OscMessage;
-            if (message == null || message.Count <= 0) return false;
+            if (message == null) return false;
 
-            address = message.Address;
-            object arg = message[0];
-            if (arg == null) return false;
+            var arguments = new object[message.Count];
+            for (int i = 0; i < message.Count; i++)
+            {
+                arguments[i] = message[i];
+            }
 
-            if (arg is float f)
-            {
-                value = f.ToString("G", System.Globalization.CultureInfo.InvariantCulture);
-                return true;
-            }
-            if (arg is double d)
-            {
-                value = d.ToString("G", System.Globalization.CultureInfo.InvariantCulture);
-                return true;
-            }
-            if (arg is int i) { value = i.ToString(); return true; }
-            if (arg is long l) { value = l.ToString(); return true; }
-            if (arg is bool b) { value = b ? "True" : "False"; return true; }
-            if (arg is string s) { value = s; return true; }
-            return false;
+            parsedMessage = new ParsedOscMessage(message.Address, arguments);
+            return true;
         }
         catch
         {
             return false;
         }
+    }
+
+    internal static bool TryFormatScalarOscArgument(object argument, out string value)
+    {
+        value = null;
+        if (argument is float floatValue)
+        {
+            value = floatValue.ToString("G", CultureInfo.InvariantCulture);
+            return true;
+        }
+        if (argument is double doubleValue)
+        {
+            value = doubleValue.ToString("G", CultureInfo.InvariantCulture);
+            return true;
+        }
+        if (argument is int intValue) { value = intValue.ToString(CultureInfo.InvariantCulture); return true; }
+        if (argument is long longValue) { value = longValue.ToString(CultureInfo.InvariantCulture); return true; }
+        if (argument is bool boolValue) { value = boolValue ? "True" : "False"; return true; }
+        if (argument is string stringValue) { value = stringValue; return true; }
+        return false;
     }
 
     internal static string GetPacketPreview(byte[] data)

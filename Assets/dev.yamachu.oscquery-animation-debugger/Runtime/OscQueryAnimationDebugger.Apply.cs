@@ -102,8 +102,20 @@ public partial class OscQueryAnimationDebugger
     /// ESP32等のOSCQueryデバイスから値を受信した時のコールバック
     /// Uses driver chain to apply values with first-success semantics.
     /// </summary>
-    private void OnOscValueReceived(string oscPath, string rawValue)
+    private void OnOscMessageReceived(ParsedOscMessage message)
     {
+        if (TryQueueTrackerMessage(message)) return;
+
+        if (TryApplyBlendshapeMessage(message)) return;
+
+        if (message.Arguments.Length == 0 || !TryFormatScalarOscArgument(message.Arguments[0], out string rawValue))
+        {
+            if (verboseReceiveLogging)
+                Debug.LogWarning($"[OSCQuery Animation Debugger] scalar値を取得できません: {message.Address}");
+            return;
+        }
+
+        string oscPath = message.Address;
         if (!TryExtractParameterName(oscPath, out string paramName))
         {
             if (verboseReceiveLogging)

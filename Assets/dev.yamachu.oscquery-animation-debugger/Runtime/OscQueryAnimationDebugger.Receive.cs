@@ -36,16 +36,16 @@ public partial class OscQueryAnimationDebugger
                     Debug.Log($"[OSCQuery Animation Debugger] UDP受信: from={endpoint.Address}:{endpoint.Port}, bytes={data.Length}");
                 }
 
-                if (TryParseOscPacket(data, out string path, out string value))
+                if (TryParseOscPacket(data, out ParsedOscMessage message))
                 {
                     if (verboseReceiveLogging)
                     {
-                        Debug.Log($"[OSCQuery Animation Debugger] OSCパース成功: path={path}, value={value}");
+                        Debug.Log($"[OSCQuery Animation Debugger] OSCパース成功: path={message.Address}, args={message.Arguments.Length}, message={string.Join(", ", message.Arguments)}");
                     }
 
                     lock (_oscQueueLock)
                     {
-                        _pendingOscMessages.Enqueue((path, value));
+                        _pendingOscMessages.Enqueue(message);
                     }
                 }
                 else if (verboseReceiveLogging)
@@ -72,8 +72,7 @@ public partial class OscQueryAnimationDebugger
         {
             while (_pendingOscMessages.Count > 0)
             {
-                var (path, value) = _pendingOscMessages.Dequeue();
-                OnOscValueReceived(path, value);
+                OnOscMessageReceived(_pendingOscMessages.Dequeue());
             }
         }
     }
