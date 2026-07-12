@@ -22,7 +22,8 @@ public sealed class TrackerBinding
 {
     [SerializeField] private TrackerSlot slot;
     [SerializeField] private Transform target;
-    [SerializeField] private bool applyPosition = true;
+    [SerializeField] [Tooltip("Experimental: Positionはtracking-space calibrationが必要です。Rotationは引き続きサポートされます。")]
+    private bool applyPosition = false;
     [SerializeField] private bool applyRotation = true;
 
     public TrackerSlot Slot => slot;
