@@ -55,6 +55,14 @@ public partial class OscQueryAnimationDebugger : MonoBehaviour
     private float trackerStaleTimeoutSeconds = 1f;
     [SerializeField] private List<TrackerBinding> trackerBindings = new List<TrackerBinding>();
 
+    [Header("OSC BlendShape 設定")]
+    [SerializeField] [Tooltip("/blendshape/{blendshapeName} の受信とOSCQuery公開を有効にします。")]
+    private bool enableBlendshapes;
+    [SerializeField] [Tooltip("BlendShapeを検索するSkinnedMeshRenderer。複数指定できます。")]
+    private List<SkinnedMeshRenderer> blendshapeTargetRenderers = new List<SkinnedMeshRenderer>();
+    [SerializeField] [Tooltip("Normalized01はOSC 0..1をUnityの0..100へ変換し、UnityWeightはOSC値をそのままUnity weightとして扱います。")]
+    private BlendShapeValueMode blendshapeValueMode = BlendShapeValueMode.Normalized01;
+
     // --- Driver chain ---
     private readonly List<IAvatarParameterDriver> _drivers = new List<IAvatarParameterDriver>();
     private readonly List<(IAvatarParameterDriver driver, DriverParameterInfo info)> _broadcastSnapshot = new List<(IAvatarParameterDriver, DriverParameterInfo)>();
@@ -84,11 +92,11 @@ public partial class OscQueryAnimationDebugger : MonoBehaviour
     // --- その他 ---
     private bool _isPrimaryAvatarInstance;
     private float _nextAnimatorRescanTime;
-    private bool _trackerConfigurationDirty;
+    private bool _configurationDirty;
 
     void OnValidate()
     {
-        _trackerConfigurationDirty = true;
+        _configurationDirty = true;
     }
 
     void Start()
@@ -118,7 +126,8 @@ public partial class OscQueryAnimationDebugger : MonoBehaviour
         _driverInitializationStartTime = Time.unscaledTime;
         _nextAnimatorRescanTime = Time.unscaledTime + 1f; // Delayed initial scan
         RebuildTrackerBindings();
-        _trackerConfigurationDirty = false;
+        RebuildBlendshapeLookup();
+        _configurationDirty = false;
         UpdateAnimatorEndpoints();
     }
 
@@ -231,10 +240,11 @@ public partial class OscQueryAnimationDebugger : MonoBehaviour
     {
         if (!_isPrimaryAvatarInstance) return;
 
-        if (_trackerConfigurationDirty)
+        if (_configurationDirty)
         {
-            _trackerConfigurationDirty = false;
+            _configurationDirty = false;
             RebuildTrackerBindings();
+            RebuildBlendshapeLookup();
             UpdateAnimatorEndpoints();
         }
 

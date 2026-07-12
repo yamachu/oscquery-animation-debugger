@@ -62,6 +62,19 @@ Tracker Position は **Experimental** です。特に Head や直接 Bone に割
 
 `head` は VRChat では tracking-space alignment に使われる特殊な入力です。このツールでは、割り当てた Transform へ head の raw pose をそのまま表示します。VRChat の全身 IK や頭部補正、Eye Tracking、スムージングは再現しないため、VRChat 内の最終 Bone 姿勢とは一致しない場合があります。
 
+## OSC BlendShape の設定
+
+Inspector の OSC BlendShape 設定で Enable BlendShapes を ON にし、Target Renderers に対象の SkinnedMeshRenderer を1つ以上登録します。複数の Renderer を登録すると、同じ名前の BlendShape を持つすべての Renderer に値を適用します。設定済みの Renderer、Mesh、BlendShape が無いものは安全に無視されます。
+
+受信パスは、スペルを含めて正確に `/blendshape/{blendshapeName}` です。例: `/blendshape/Smile`。`blendshapeName` は URL デコードせず、OSC address の `/blendshape/` より後ろの空でない全サフィックスを、大文字小文字を区別してそのまま検索します。
+
+Value Mode は次の2種類です。
+
+- Normalized01（既定）: OSC の値 `0..1` を Unity の BlendShape weight `0..100` に変換します。
+- UnityWeight: OSC の値を Unity weight `0..100` としてそのまま使います。
+
+最終 weight は常に `0..100` にクランプされます。同じフレームに複数のメッセージがある場合はキューの順に適用され、最後の値が残ります。値をリセットしたり、古い値で上書きしたりはしません。OSCQuery 有効時は、設定済み Mesh から見つかった名前ごとに同じ `/blendshape/{blendshapeName}` を `f` / WriteOnly として公開します。名前に `/` を含む BlendShape は OSCQuery 側で登録できない場合がありますが、直接受信のサフィックス検索はそのまま行います。
+
 ## Parameter Driver Mode の選び方
 
 - Auto（既定）

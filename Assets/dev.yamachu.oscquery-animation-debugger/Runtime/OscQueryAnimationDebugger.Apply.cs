@@ -106,6 +106,8 @@ public partial class OscQueryAnimationDebugger
     {
         if (TryQueueTrackerMessage(message)) return;
 
+        if (TryApplyBlendshapeMessage(message)) return;
+
         if (message.Arguments.Length == 0 || !TryFormatScalarOscArgument(message.Arguments[0], out string rawValue))
         {
             if (verboseReceiveLogging)

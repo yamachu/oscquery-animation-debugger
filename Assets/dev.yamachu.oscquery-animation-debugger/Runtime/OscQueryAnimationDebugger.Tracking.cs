@@ -55,6 +55,7 @@ public partial class OscQueryAnimationDebugger
         }
 
         RegisterTrackerEndpoints();
+        RegisterBlendshapeEndpoints();
 
         if (_registeredEndpoints.Count != _lastRegisteredEndpointCount)
         {
