@@ -46,6 +46,15 @@ public partial class OscQueryAnimationDebugger : MonoBehaviour
     [SerializeField] [Tooltip("Animator再スキャン間隔(秒)。Prefab追加後の遅延反映に使います。")]
     private float animatorRescanIntervalSeconds = 2f;
 
+    [Header("OSC Tracker 設定")]
+    [SerializeField] [Tooltip("標準OSC Trackerパスの受信とOSCQuery公開を有効にします。")]
+    private bool enableTrackers;
+    [SerializeField] [Tooltip("OSC座標の原点。未指定時はこのコンポーネントのtransform.rootを使用します。")]
+    private Transform trackerReferenceTransform;
+    [SerializeField] [Min(0f)] [Tooltip("この秒数より古い更新は適用しません。最終姿勢は維持されます。")]
+    private float trackerStaleTimeoutSeconds = 1f;
+    [SerializeField] private List<TrackerBinding> trackerBindings = new List<TrackerBinding>();
+
     // --- Driver chain ---
     private readonly List<IAvatarParameterDriver> _drivers = new List<IAvatarParameterDriver>();
     private readonly List<(IAvatarParameterDriver driver, DriverParameterInfo info)> _broadcastSnapshot = new List<(IAvatarParameterDriver, DriverParameterInfo)>();
@@ -64,7 +73,7 @@ public partial class OscQueryAnimationDebugger : MonoBehaviour
     private Thread _oscReceiveThread;
     private volatile bool _oscRunning;
     private UdpClient _oscSendClient;
-    private readonly Queue<(string path, string value)> _pendingOscMessages = new Queue<(string, string)>();
+    private readonly Queue<ParsedOscMessage> _pendingOscMessages = new Queue<ParsedOscMessage>();
     private readonly object _oscQueueLock = new object();
 
     // --- エンドポイント・ブロードキャスト状態 ---
@@ -75,6 +84,12 @@ public partial class OscQueryAnimationDebugger : MonoBehaviour
     // --- その他 ---
     private bool _isPrimaryAvatarInstance;
     private float _nextAnimatorRescanTime;
+    private bool _trackerConfigurationDirty;
+
+    void OnValidate()
+    {
+        _trackerConfigurationDirty = true;
+    }
 
     void Start()
     {
@@ -102,6 +117,9 @@ public partial class OscQueryAnimationDebugger : MonoBehaviour
         // Start driver initialization time tracking
         _driverInitializationStartTime = Time.unscaledTime;
         _nextAnimatorRescanTime = Time.unscaledTime + 1f; // Delayed initial scan
+        RebuildTrackerBindings();
+        _trackerConfigurationDirty = false;
+        UpdateAnimatorEndpoints();
     }
 
     private void InitializeDriverChain()
@@ -213,6 +231,13 @@ public partial class OscQueryAnimationDebugger : MonoBehaviour
     {
         if (!_isPrimaryAvatarInstance) return;
 
+        if (_trackerConfigurationDirty)
+        {
+            _trackerConfigurationDirty = false;
+            RebuildTrackerBindings();
+            UpdateAnimatorEndpoints();
+        }
+
         // Try to initialize drivers that are not ready yet (throttled to ~1s)
         if (!_driverInitializationTimedOut && Time.unscaledTime >= _nextDriverRetryTime)
         {
@@ -271,6 +296,7 @@ public partial class OscQueryAnimationDebugger : MonoBehaviour
         }
 
         ProcessPendingOscMessages();
+        ApplyDirtyTrackerPoses();
 
         // Broadcast changed parameters using drivers
         BroadcastChangedParameters();

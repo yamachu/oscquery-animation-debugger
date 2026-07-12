@@ -54,6 +54,8 @@ public partial class OscQueryAnimationDebugger
             }
         }
 
+        RegisterTrackerEndpoints();
+
         if (_registeredEndpoints.Count != _lastRegisteredEndpointCount)
         {
             _lastRegisteredEndpointCount = _registeredEndpoints.Count;
