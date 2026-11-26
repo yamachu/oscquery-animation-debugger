@@ -45,6 +45,10 @@ unitypackage 版を配布する場合は、依存解決を手動で行う必要�
 2. Play します。
 3. Inspector の Parameter Driver Mode を必要に応じて選択します。
 
+## パラメーターの送信
+
+Inspector の Enable Parameter Broadcast は既定で ON です。OFF にすると、アバターパラメーターの変化監視とリモート OSC デバイスへの送信を停止します。OSC 入力と OSCQuery による受信先の公開はそのまま利用できます。配信では OFF にし、双方向のデバイス開発時には ON に戻してください。
+
 ## ログ出力
 
 Inspector の Verbose Receive Logging は既定で OFF です。ON にすると OSC の受信・送信、パラメーター適用、エンドポイント登録などの詳細ログを表示します。大量のディスク書き込みを避けるため、詳細ログは種類ごとに先頭の例を表示し、約5秒間の残りを省略件数としてまとめます。全パケットの記録ではありません。

@@ -26,8 +26,11 @@ public partial class OscQueryAnimationDebugger
 
             Debug.Log($"[OSCQuery Animation Debugger] サービス起動成功: {serviceName} (IP:{localIP} / TCP:{tcpPort} / UDP:{oscPort})");
 
-            RefreshDiscoveredServices();
-            _nextDiscoveryRefreshTime = Time.unscaledTime + Mathf.Max(1f, discoveryRefreshIntervalSeconds);
+            if (enableParameterBroadcast)
+            {
+                RefreshDiscoveredServices();
+                _nextDiscoveryRefreshTime = Time.unscaledTime + Mathf.Max(1f, discoveryRefreshIntervalSeconds);
+            }
         }
         catch (Exception e)
         {

@@ -36,6 +36,9 @@ public partial class OscQueryAnimationDebugger : MonoBehaviour
     [SerializeField] private int oscPort = 9010;
     [SerializeField] private float discoveryRefreshIntervalSeconds = 5f;
     [SerializeField]
+    [Tooltip("アバターパラメーターの変化を発見済みOSCデバイスへ送信します。配信時は無効にできます。")]
+    private bool enableParameterBroadcast = true;
+    [SerializeField]
     [Tooltip("OSC通信やパラメーターの詳細ログをサンプリング表示します。詳細ログ対象外の警告・エラーはOFFでも表示されます。")]
     private bool verboseReceiveLogging = false;
 
@@ -309,7 +312,7 @@ public partial class OscQueryAnimationDebugger : MonoBehaviour
             }
         }
 
-        if (_oscQueryService != null && Time.unscaledTime >= _nextDiscoveryRefreshTime)
+        if (enableParameterBroadcast && _oscQueryService != null && Time.unscaledTime >= _nextDiscoveryRefreshTime)
         {
             RefreshDiscoveredServices();
             _nextDiscoveryRefreshTime = Time.unscaledTime + Mathf.Max(1f, discoveryRefreshIntervalSeconds);
@@ -324,8 +327,10 @@ public partial class OscQueryAnimationDebugger : MonoBehaviour
         ProcessPendingOscMessages();
         ApplyDirtyTrackerPoses();
 
-        // Broadcast changed parameters using drivers
-        BroadcastChangedParameters();
+        if (enableParameterBroadcast)
+        {
+            BroadcastChangedParameters();
+        }
     }
 
     void OnDisable()

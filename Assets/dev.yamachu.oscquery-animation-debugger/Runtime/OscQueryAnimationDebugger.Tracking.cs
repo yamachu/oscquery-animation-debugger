@@ -40,7 +40,10 @@ public partial class OscQueryAnimationDebugger
                     continue;
 
                 allParameters[paramInfo.Name] = paramInfo;
-                _broadcastSnapshot.Add((driver, paramInfo));
+                if (enableParameterBroadcast)
+                {
+                    _broadcastSnapshot.Add((driver, paramInfo));
+                }
 
                 try
                 {
