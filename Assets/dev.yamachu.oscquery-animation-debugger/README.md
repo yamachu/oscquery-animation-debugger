@@ -45,6 +45,30 @@ unitypackage 版を配布する場合は、依存解決を手動で行う必要�
 2. Play します。
 3. Inspector の Parameter Driver Mode を必要に応じて選択します。
 
+## パラメーターの送信
+
+Inspector の Enable Parameter Broadcast は既定で ON です。OFF にすると、アバターパラメーターの変化監視とリモート OSC デバイスへの送信を停止します。OSC 入力と OSCQuery による受信先の公開はそのまま利用できます。配信では OFF にし、双方向のデバイス開発時には ON に戻してください。
+
+## ログ出力
+
+Inspector の Verbose Receive Logging は既定で OFF です。ON にすると OSC の受信・送信、パラメーター適用、エンドポイント登録などの詳細ログを表示します。大量のディスク書き込みを避けるため、詳細ログは種類ごとに先頭の例を表示し、約5秒間の残りを省略件数としてまとめます。全パケットの記録ではありません。
+
+詳細ログ対象外の警告・エラーは、詳細ログが OFF でも表示します。同じメッセージが繰り返される場合は初回を表示し、残りの件数を約5秒ごとにまとめます。サービス発見・登録などの通知も、繰り返しや大量発生を集約します。異なるメッセージが同時に多数発生した場合も、例と省略件数を表示します。コンポーネントの無効化・終了時には未報告の件数を出力します。ほかの Unity アセットのログは制限しません。
+
+## VS Code からのテスト実行（開発用）
+
+開発用 Unity プロジェクトの `.vscode/tasks.json` に、ログ集約テストを実行するタスクを用意しています。C# Dev Kit の Testing ビューではなく、Unity Test Framework をバッチ実行する構成です。
+
+1. 対象プロジェクトを開いている Unity Editor を閉じます。同じプロジェクトを二重起動してテストすることはできません。
+2. VS Code の `Tasks: Run Task` から次のいずれかを選びます。
+   - `Unity: OSCQuery tests`: EditMode の `OscQueryLoggingTests` を実行します。
+   - `Unity: OSCQuery tests with coverage`: 同じテストを実行し、OSCQuery ランタイムアセンブリ全体のカバレッジも生成します。
+3. Unity 実行ファイルのパスを入力します。既定値は macOS の Unity Hub / 2022.3.22f1 です。別の環境では `ProjectSettings/ProjectVersion.txt` に対応する Editor の実行ファイルを指定してください。
+
+結果 XML と Unity ログはプロジェクト直下の `Logs/OscQueryTests/` に保存されます。カバレッジの HTML は `Logs/OscQueryTests/Coverage/Report/index.htm` で確認できます。再実行時は同じ出力先を使うため、結果の更新日時も確認してください。
+
+Unity Test Framework と、カバレッジ計測には Code Coverage パッケージが必要です。この開発環境では `com.unity.feature.development` 経由で導入されています。PlayMode や他のアセットのテストは対象に含みません。分岐カバレッジは Unity Code Coverage の制限により取得できません。
+
 ## OSC Tracker の設定
 
 標準の `/tracking/trackers/{1..8|head}/{position|rotation}` を受信し、任意の Transform へ生の姿勢を反映できます。

@@ -31,14 +31,14 @@ public partial class OscQueryAnimationDebugger
             try
             {
                 byte[] data = _oscUdpClient.Receive(ref endpoint);
-                if (verboseReceiveLogging)
+                if (ShouldLogVerbose("UDP受信"))
                 {
                     Debug.Log($"[OSCQuery Animation Debugger] UDP受信: from={endpoint.Address}:{endpoint.Port}, bytes={data.Length}");
                 }
 
                 if (TryParseOscPacket(data, out ParsedOscMessage message))
                 {
-                    if (verboseReceiveLogging)
+                    if (ShouldLogVerbose("OSCパース成功"))
                     {
                         Debug.Log($"[OSCQuery Animation Debugger] OSCパース成功: path={message.Address}, args={message.Arguments.Length}, message={string.Join(", ", message.Arguments)}");
                     }
@@ -48,7 +48,7 @@ public partial class OscQueryAnimationDebugger
                         _pendingOscMessages.Enqueue(message);
                     }
                 }
-                else if (verboseReceiveLogging)
+                else if (ShouldLogVerbose("OSCパース失敗", LogType.Warning))
                 {
                     Debug.LogWarning($"[OSCQuery Animation Debugger] OSCパース失敗: {GetPacketPreview(data)}");
                 }
@@ -61,7 +61,7 @@ public partial class OscQueryAnimationDebugger
             catch (Exception e)
             {
                 if (_oscRunning)
-                    Debug.LogWarning($"[OSCQuery Animation Debugger] OSC 受信エラー: {e.Message}");
+                    LogWarningRepeated($"[OSCQuery Animation Debugger] OSC 受信エラー: {e.Message}");
             }
         }
     }

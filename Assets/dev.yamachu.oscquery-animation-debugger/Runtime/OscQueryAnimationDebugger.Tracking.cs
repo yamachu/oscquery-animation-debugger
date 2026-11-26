@@ -1,8 +1,8 @@
-using UnityEngine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using UnityEngine;
 using VRC.OSCQuery;
 
 public partial class OscQueryAnimationDebugger
@@ -40,7 +40,10 @@ public partial class OscQueryAnimationDebugger
                     continue;
 
                 allParameters[paramInfo.Name] = paramInfo;
-                _broadcastSnapshot.Add((driver, paramInfo));
+                if (enableParameterBroadcast)
+                {
+                    _broadcastSnapshot.Add((driver, paramInfo));
+                }
 
                 try
                 {
@@ -49,7 +52,7 @@ public partial class OscQueryAnimationDebugger
                 }
                 catch (Exception ex)
                 {
-                    Debug.LogWarning($"[OSCQuery Animation Debugger] エンドポイント登録失敗: {oscPath} - {ex.Message}");
+                    LogWarningRepeated($"[OSCQuery Animation Debugger] エンドポイント登録失敗: {oscPath} - {ex.Message}");
                 }
             }
         }
@@ -60,9 +63,9 @@ public partial class OscQueryAnimationDebugger
         if (_registeredEndpoints.Count != _lastRegisteredEndpointCount)
         {
             _lastRegisteredEndpointCount = _registeredEndpoints.Count;
-            Debug.Log($"[OSCQuery Animation Debugger] {_registeredEndpoints.Count} 個のエンドポイントを登録しました");
+            LogInfoRepeated($"[OSCQuery Animation Debugger] {_registeredEndpoints.Count} 個のエンドポイントを登録しました");
         }
-        else if (verboseReceiveLogging)
+        else if (ShouldLogVerbose("エンドポイント数に変化なし"))
         {
             Debug.Log($"[OSCQuery Animation Debugger] エンドポイント数に変化なし: {_registeredEndpoints.Count}");
         }
@@ -97,7 +100,7 @@ public partial class OscQueryAnimationDebugger
                 return;
         }
 
-        if (verboseReceiveLogging)
+        if (ShouldLogVerbose("エンドポイント登録"))
         {
             Debug.Log($"[OSCQuery Animation Debugger] エンドポイント登録: {oscPath} ({typeDesc}) source={sourceLabel}");
         }

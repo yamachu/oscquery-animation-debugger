@@ -59,7 +59,7 @@ public class AnimatorParameterDriver : IAvatarParameterDriver
                 if (ApplyValueToAnimator(targetAnimator, paramName, rawValue))
                 {
                     applied = true;
-                    if (_bridge.VerboseReceiveLogging)
+                    if (_bridge.ShouldLogVerbose("Animatorへの適用経路"))
                     {
                         Debug.Log($"[OSCQuery Animation Debugger] マップ適用成功: parameter={paramName}, animator={targetAnimator.name}, rawValue={rawValue}");
                     }
@@ -86,7 +86,7 @@ public class AnimatorParameterDriver : IAvatarParameterDriver
             if (ApplyValueToAnimator(hierarchyAnimator, paramName, rawValue))
             {
                 applied = true;
-                if (_bridge.VerboseReceiveLogging)
+                if (_bridge.ShouldLogVerbose("Animatorへの適用経路"))
                 {
                     Debug.Log($"[OSCQuery Animation Debugger] 階層Animatorへ適用: animator={hierarchyAnimator.name}, parameter={paramName}, rawValue={rawValue}");
                 }
@@ -152,7 +152,7 @@ public class AnimatorParameterDriver : IAvatarParameterDriver
     {
         if (animator == null || animator.runtimeAnimatorController == null)
         {
-            if (_bridge.VerboseReceiveLogging && animator != null)
+            if (animator != null && _bridge.ShouldLogVerbose("Animatorをスキップ"))
             {
                 Debug.Log($"[OSCQuery Animation Debugger] Animatorをスキップ(Controllerなし): {animator.name}");
             }
@@ -193,7 +193,7 @@ public class AnimatorParameterDriver : IAvatarParameterDriver
             RegisterAnimatorParameterTarget(param.name, animator);
             RegisterAnimatorBroadcastSource(param.name, animator, param.type);
 
-            if (_bridge.VerboseReceiveLogging)
+            if (_bridge.ShouldLogVerbose("Animatorパラメーター登録"))
             {
                 Debug.Log($"[OSCQuery Animation Debugger] Animatorパラメーター登録: {param.name} ({param.type}) source={animator.name}");
             }
@@ -315,7 +315,7 @@ public class AnimatorParameterDriver : IAvatarParameterDriver
                         if (OscQueryAnimationDebugger.TryParseFloatInvariant(rawValue, out float fVal))
                         {
                             animator.SetFloat(paramName, fVal);
-                            if (_bridge.VerboseReceiveLogging)
+                            if (_bridge.ShouldLogVerbose("Animator値の適用"))
                                 Debug.Log($"[OSCQuery Animation Debugger] Animator Float: {paramName} = {fVal}");
                         }
                         break;
@@ -324,7 +324,7 @@ public class AnimatorParameterDriver : IAvatarParameterDriver
                         if (OscQueryAnimationDebugger.TryParseIntInvariant(rawValue, out int iVal))
                         {
                             animator.SetInteger(paramName, iVal);
-                            if (_bridge.VerboseReceiveLogging)
+                            if (_bridge.ShouldLogVerbose("Animator値の適用"))
                                 Debug.Log($"[OSCQuery Animation Debugger] Animator Int: {paramName} = {iVal}");
                         }
                         break;
@@ -333,14 +333,14 @@ public class AnimatorParameterDriver : IAvatarParameterDriver
                         if (OscQueryAnimationDebugger.TryParseBoolFlexible(rawValue, out bool bVal))
                         {
                             animator.SetBool(paramName, bVal);
-                            if (_bridge.VerboseReceiveLogging)
+                            if (_bridge.ShouldLogVerbose("Animator値の適用"))
                                 Debug.Log($"[OSCQuery Animation Debugger] Animator Bool: {paramName} = {bVal}");
                         }
                         break;
 
                     case AnimatorControllerParameterType.Trigger:
                         animator.SetTrigger(paramName);
-                        if (_bridge.VerboseReceiveLogging)
+                        if (_bridge.ShouldLogVerbose("Animator値の適用"))
                             Debug.Log($"[OSCQuery Animation Debugger] Animator Trigger: {paramName}");
                         break;
                 }
@@ -348,7 +348,7 @@ public class AnimatorParameterDriver : IAvatarParameterDriver
             }
         }
 
-        if (!foundParameter && _bridge.VerboseReceiveLogging)
+        if (!foundParameter && _bridge.ShouldLogVerbose("Animatorパラメーターが見つからない", LogType.Warning))
         {
             Debug.LogWarning($"[OSCQuery Animation Debugger] Animator parameter が見つかりません: {paramName}");
         }

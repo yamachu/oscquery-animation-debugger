@@ -1,0 +1,51 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Unity: OSCQuery tests",
+            "type": "process",
+            "command": "${input:unityEditor}",
+            "args": [
+                "-batchmode",
+                "-nographics",
+                "-projectPath", "${workspaceFolder}",
+                "-runTests",
+                "-testPlatform", "EditMode",
+                "-testFilter", "OscQueryLoggingTests",
+                "-testResults", "${workspaceFolder}/Logs/OscQueryTests/results.xml",
+                "-logFile", "${workspaceFolder}/Logs/OscQueryTests/unity.log"
+            ],
+            "group": "test",
+            "problemMatcher": []
+        },
+        {
+            "label": "Unity: OSCQuery tests with coverage",
+            "type": "process",
+            "command": "${input:unityEditor}",
+            "args": [
+                "-batchmode",
+                "-nographics",
+                "-projectPath", "${workspaceFolder}",
+                "-runTests",
+                "-testPlatform", "EditMode",
+                "-testFilter", "OscQueryLoggingTests",
+                "-debugCodeOptimization",
+                "-enableCodeCoverage",
+                "-coverageResultsPath", "${workspaceFolder}/Logs/OscQueryTests/Coverage",
+                "-coverageOptions", "generateHtmlReport;generateAdditionalMetrics;generateAdditionalReports;assemblyFilters:+dev.yamachu.oscquery-animation-debugger",
+                "-testResults", "${workspaceFolder}/Logs/OscQueryTests/coverage-results.xml",
+                "-logFile", "${workspaceFolder}/Logs/OscQueryTests/coverage-unity.log"
+            ],
+            "group": "test",
+            "problemMatcher": []
+        }
+    ],
+    "inputs": [
+        {
+            "id": "unityEditor",
+            "type": "promptString",
+            "description": "Unity Editor executable path (must match ProjectSettings/ProjectVersion.txt)",
+            "default": "/Applications/Unity/Hub/Editor/2022.3.22f1/Unity.app/Contents/MacOS/Unity"
+        }
+    ]
+}

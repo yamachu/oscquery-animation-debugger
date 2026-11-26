@@ -155,7 +155,7 @@ public class GestureManagerDriver : IAvatarParameterDriver
         {
             _setMethod.Invoke(paramObj, new object[] { _moduleInstance, floatValue, null });
 
-            if (_bridge.VerboseReceiveLogging)
+            if (_bridge.ShouldLogVerbose("Gesture Managerパラメーターの適用"))
             {
                 Debug.Log($"[OSCQuery Animation Debugger] GM param applied: {paramName} = {rawValue} (float: {floatValue})");
             }
@@ -164,7 +164,7 @@ public class GestureManagerDriver : IAvatarParameterDriver
         }
         catch (Exception ex)
         {
-            Debug.LogWarning($"[OSCQuery Animation Debugger] GM Set failed for {paramName}: {ex.Message}");
+            _bridge.LogWarningRepeated($"[OSCQuery Animation Debugger] GM Set failed for {paramName}: {ex.Message}");
             return false;
         }
     }
@@ -237,7 +237,7 @@ public class GestureManagerDriver : IAvatarParameterDriver
         }
         catch (Exception ex)
         {
-            Debug.LogWarning($"[OSCQuery Animation Debugger] GM parameter enumeration failed: {ex.Message}");
+            _bridge.LogWarningRepeated($"[OSCQuery Animation Debugger] GM parameter enumeration failed: {ex.Message}");
             IsReady = false;
             return new List<DriverParameterInfo>();
         }
@@ -292,7 +292,7 @@ public class GestureManagerDriver : IAvatarParameterDriver
         }
         catch (Exception ex)
         {
-            Debug.LogWarning($"[OSCQuery Animation Debugger] GM read failed for {paramName}: {ex.Message}");
+            _bridge.LogWarningRepeated($"[OSCQuery Animation Debugger] GM read failed for {paramName}: {ex.Message}");
             return false;
         }
     }

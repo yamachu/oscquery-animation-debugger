@@ -40,7 +40,7 @@ public class CustomComponentFieldDriver : IAvatarParameterDriver
                         if (OscQueryAnimationDebugger.TryParseFloatInvariant(rawValue, out float fVal))
                         {
                             field.SetValue(component, fVal);
-                            if (_bridge.VerboseReceiveLogging)
+                            if (_bridge.ShouldLogVerbose("カスタムフィールド値の適用"))
                             {
                                 Debug.Log($"[OSCQuery Animation Debugger] カスタムフィールド適用（Float）: {component.GetType().Name}.{paramName} = {fVal}");
                             }
@@ -52,7 +52,7 @@ public class CustomComponentFieldDriver : IAvatarParameterDriver
                         if (OscQueryAnimationDebugger.TryParseIntInvariant(rawValue, out int iVal))
                         {
                             field.SetValue(component, iVal);
-                            if (_bridge.VerboseReceiveLogging)
+                            if (_bridge.ShouldLogVerbose("カスタムフィールド値の適用"))
                             {
                                 Debug.Log($"[OSCQuery Animation Debugger] カスタムフィールド適用（Int）: {component.GetType().Name}.{paramName} = {iVal}");
                             }
@@ -64,7 +64,7 @@ public class CustomComponentFieldDriver : IAvatarParameterDriver
                         if (OscQueryAnimationDebugger.TryParseBoolFlexible(rawValue, out bool bVal))
                         {
                             field.SetValue(component, bVal);
-                            if (_bridge.VerboseReceiveLogging)
+                            if (_bridge.ShouldLogVerbose("カスタムフィールド値の適用"))
                             {
                                 Debug.Log($"[OSCQuery Animation Debugger] カスタムフィールド適用（Bool）: {component.GetType().Name}.{paramName} = {bVal}");
                             }
@@ -74,7 +74,7 @@ public class CustomComponentFieldDriver : IAvatarParameterDriver
                 }
                 catch (Exception ex)
                 {
-                    Debug.LogError($"[OSCQuery Animation Debugger] カスタムフィールド値設定失敗: {paramName} - {ex.Message}");
+                    _bridge.LogErrorRepeated($"[OSCQuery Animation Debugger] カスタムフィールド値設定失敗: {paramName} - {ex.Message}");
                     return true; // Handled (even if failed)
                 }
             }
@@ -146,7 +146,7 @@ public class CustomComponentFieldDriver : IAvatarParameterDriver
 
                 parameters.Add(new DriverParameterInfo(field.Name, paramType, ParameterAccess.ReadWrite));
 
-                if (_bridge.VerboseReceiveLogging)
+                if (_bridge.ShouldLogVerbose("カスタムフィールド登録"))
                 {
                     Debug.Log($"[OSCQuery Animation Debugger] カスタムコンポーネントフィールド登録: {field.Name} ({field.FieldType.Name})");
                 }

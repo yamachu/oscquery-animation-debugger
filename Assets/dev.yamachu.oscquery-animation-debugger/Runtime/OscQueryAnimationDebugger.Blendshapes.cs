@@ -20,14 +20,11 @@ public partial class OscQueryAnimationDebugger
     }
 
     private readonly Dictionary<string, List<BlendshapeTarget>> _blendshapeLookup = new Dictionary<string, List<BlendshapeTarget>>(StringComparer.Ordinal);
-    private readonly HashSet<string> _warnedMissingBlendshapes = new HashSet<string>(StringComparer.Ordinal);
     private readonly HashSet<string> _warnedBlendshapeEndpointPaths = new HashSet<string>(StringComparer.Ordinal);
 
     private void RebuildBlendshapeLookup()
     {
         _blendshapeLookup.Clear();
-        _warnedMissingBlendshapes.Clear();
-
         if (blendshapeTargetRenderers == null) return;
 
         var seenRenderers = new HashSet<SkinnedMeshRenderer>();
@@ -59,14 +56,14 @@ public partial class OscQueryAnimationDebugger
         if (string.IsNullOrEmpty(blendshapeName)) return true;
         if (message.Arguments == null || message.Arguments.Length != 1 || !TryGetNumericValue(message.Arguments[0], out float value))
         {
-            if (verboseReceiveLogging)
+            if (ShouldLogVerbose("BlendShape値の形式不正", LogType.Warning))
                 Debug.LogWarning($"[OSCQuery Animation Debugger] BlendShape値はfloat/double/int/longの1引数が必要です: {message.Address}");
             return true;
         }
 
         if (!_blendshapeLookup.TryGetValue(blendshapeName, out List<BlendshapeTarget> targets))
         {
-            if (verboseReceiveLogging && _warnedMissingBlendshapes.Add(blendshapeName))
+            if (ShouldLogVerbose("BlendShapeが見つからない", LogType.Warning))
                 Debug.LogWarning($"[OSCQuery Animation Debugger] BlendShape '{blendshapeName}' を設定済みRendererから見つけられませんでした");
             return true;
         }

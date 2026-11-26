@@ -51,7 +51,7 @@ public class LyumaAv3RuntimeDriver : IAvatarParameterDriver
             }
             else
             {
-                Debug.LogWarning("[OSCQuery Animation Debugger] LyumaAv3Runtimeが見つかりません。Av3Emulatorがインストールされているか確認してください。");
+                _bridge.LogWarningRepeated("[OSCQuery Animation Debugger] LyumaAv3Runtimeが見つかりません。Av3Emulatorがインストールされているか確認してください。");
                 return false;
             }
         }
@@ -92,7 +92,7 @@ public class LyumaAv3RuntimeDriver : IAvatarParameterDriver
                 && TrySetRuntimeFloatParam(runtime, floatIdx, fVal))
             {
                 applied = true;
-                if (_bridge.VerboseReceiveLogging)
+                if (_bridge.ShouldLogVerbose("Av3Runtime値の適用"))
                 {
                     Debug.Log($"[OSCQuery Animation Debugger] Runtime Float適用: {paramName} = {fVal} target={GetRuntimeName(runtime)}");
                 }
@@ -103,7 +103,7 @@ public class LyumaAv3RuntimeDriver : IAvatarParameterDriver
                 && TrySetRuntimeListValue(runtime, _av3IntsField, intIdx, "value", iVal))
             {
                 applied = true;
-                if (_bridge.VerboseReceiveLogging)
+                if (_bridge.ShouldLogVerbose("Av3Runtime値の適用"))
                 {
                     Debug.Log($"[OSCQuery Animation Debugger] Runtime Int適用: {paramName} = {iVal} target={GetRuntimeName(runtime)}");
                 }
@@ -114,7 +114,7 @@ public class LyumaAv3RuntimeDriver : IAvatarParameterDriver
                 && TrySetRuntimeListValue(runtime, _av3BoolsField, boolIdx, "value", bVal))
             {
                 applied = true;
-                if (_bridge.VerboseReceiveLogging)
+                if (_bridge.ShouldLogVerbose("Av3Runtime値の適用"))
                 {
                     Debug.Log($"[OSCQuery Animation Debugger] Runtime Bool適用: {paramName} = {bVal} target={GetRuntimeName(runtime)}");
                 }
@@ -189,7 +189,7 @@ public class LyumaAv3RuntimeDriver : IAvatarParameterDriver
             }
             catch (Exception ex)
             {
-                Debug.LogWarning($"[OSCQuery Animation Debugger] Runtime animator取得失敗: {ex.Message}");
+                _bridge.LogWarningRepeated($"[OSCQuery Animation Debugger] Runtime animator取得失敗: {ex.Message}");
             }
         }
         return null;
@@ -210,7 +210,7 @@ public class LyumaAv3RuntimeDriver : IAvatarParameterDriver
 
             parameters.Add(new DriverParameterInfo(paramName, paramType, ParameterAccess.ReadWrite));
 
-            if (_bridge.VerboseReceiveLogging)
+            if (_bridge.ShouldLogVerbose("Av3Runtimeパラメーター登録"))
             {
                 Debug.Log($"[OSCQuery Animation Debugger] Runtimeパラメーター登録: {paramName} ({paramType})");
             }
