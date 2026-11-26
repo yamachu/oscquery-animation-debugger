@@ -1,4 +1,3 @@
-using UnityEngine;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -6,6 +5,7 @@ using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Threading;
+using UnityEngine;
 using VRC.OSCQuery;
 
 public enum ParameterDriverMode
@@ -23,9 +23,11 @@ public partial class OscQueryAnimationDebugger : MonoBehaviour
     private static int? s_activeAvatarRootId;
 
     [Header("パラメータードライバー設定")]
-    [SerializeField] [Tooltip("パラメーター適用方式: Auto=全てを試行, Av3Emulator=Av3優先, GestureManager=GM優先, AnimatorOnly=Animatorのみ")]
+    [SerializeField]
+    [Tooltip("パラメーター適用方式: Auto=全てを試行, Av3Emulator=Av3優先, GestureManager=GM優先, AnimatorOnly=Animatorのみ")]
     private ParameterDriverMode driverMode = ParameterDriverMode.Auto;
-    [SerializeField] [Tooltip("ドライバー初期化のタイムアウト(秒)。この時間内にドライバーが準備完了しない場合は警告を出します。")]
+    [SerializeField]
+    [Tooltip("ドライバー初期化のタイムアウト(秒)。この時間内にドライバーが準備完了しない場合は警告を出します。")]
     private float driverInitializationTimeoutSeconds = 30f;
 
     [Header("OSCQuery 設定")]
@@ -33,34 +35,46 @@ public partial class OscQueryAnimationDebugger : MonoBehaviour
     [SerializeField] private int tcpPort = 9001;
     [SerializeField] private int oscPort = 9010;
     [SerializeField] private float discoveryRefreshIntervalSeconds = 5f;
-    [SerializeField] private bool verboseReceiveLogging = false;
+    [SerializeField]
+    [Tooltip("OSC通信やパラメーターの詳細ログをサンプリング表示します。詳細ログ対象外の警告・エラーはOFFでも表示されます。")]
+    private bool verboseReceiveLogging = false;
 
     [Header("複製アバター除外設定")]
     [SerializeField] private string[] excludedRootNameKeywords = { "shadowclone", "mirrorreflection", "mirror_reflection" };
 
     [Header("カスタムコンポーネント探索設定")]
-    [SerializeField] [Tooltip("コンポーネントのクラス名（例: GlassAmountComponent）。完全修飾名は不要です。")]
+    [SerializeField]
+    [Tooltip("コンポーネントのクラス名（例: GlassAmountComponent）。完全修飾名は不要です。")]
     private string[] customComponentNamesToExpose = { };
-    [SerializeField] [Tooltip("アバターヒエラルキー配下の全Animatorも探索対象にします（Modular AvatarのPrefab追加対策）。")]
+    [SerializeField]
+    [Tooltip("アバターヒエラルキー配下の全Animatorも探索対象にします（Modular AvatarのPrefab追加対策）。")]
     private bool includeHierarchyAnimators = true;
-    [SerializeField] [Tooltip("Animator再スキャン間隔(秒)。Prefab追加後の遅延反映に使います。")]
+    [SerializeField]
+    [Tooltip("Animator再スキャン間隔(秒)。Prefab追加後の遅延反映に使います。")]
     private float animatorRescanIntervalSeconds = 2f;
 
     [Header("OSC Tracker 設定")]
-    [SerializeField] [Tooltip("標準OSC Trackerパスの受信とOSCQuery公開を有効にします。")]
+    [SerializeField]
+    [Tooltip("標準OSC Trackerパスの受信とOSCQuery公開を有効にします。")]
     private bool enableTrackers;
-    [SerializeField] [Tooltip("OSC座標の原点。未指定時はこのコンポーネントのtransform.rootを使用します。")]
+    [SerializeField]
+    [Tooltip("OSC座標の原点。未指定時はこのコンポーネントのtransform.rootを使用します。")]
     private Transform trackerReferenceTransform;
-    [SerializeField] [Min(0f)] [Tooltip("この秒数より古い更新は適用しません。最終姿勢は維持されます。")]
+    [SerializeField]
+    [Min(0f)]
+    [Tooltip("この秒数より古い更新は適用しません。最終姿勢は維持されます。")]
     private float trackerStaleTimeoutSeconds = 1f;
     [SerializeField] private List<TrackerBinding> trackerBindings = new List<TrackerBinding>();
 
     [Header("OSC BlendShape 設定")]
-    [SerializeField] [Tooltip("/blendshape/{blendshapeName} の受信とOSCQuery公開を有効にします。")]
+    [SerializeField]
+    [Tooltip("/blendshape/{blendshapeName} の受信とOSCQuery公開を有効にします。")]
     private bool enableBlendshapes;
-    [SerializeField] [Tooltip("BlendShapeを検索するSkinnedMeshRenderer。複数指定できます。")]
+    [SerializeField]
+    [Tooltip("BlendShapeを検索するSkinnedMeshRenderer。複数指定できます。")]
     private List<SkinnedMeshRenderer> blendshapeTargetRenderers = new List<SkinnedMeshRenderer>();
-    [SerializeField] [Tooltip("Normalized01はOSC 0..1をUnityの0..100へ変換し、UnityWeightはOSC値をそのままUnity weightとして扱います。")]
+    [SerializeField]
+    [Tooltip("Normalized01はOSC 0..1をUnityの0..100へ変換し、UnityWeightはOSC値をそのままUnity weightとして扱います。")]
     private BlendShapeValueMode blendshapeValueMode = BlendShapeValueMode.Normalized01;
 
     // --- Driver chain ---
@@ -172,7 +186,7 @@ public partial class OscQueryAnimationDebugger : MonoBehaviour
     }
 
     // --- ドライバー向け公開プロパティ ---
-    public bool VerboseReceiveLogging => verboseReceiveLogging;
+    public bool VerboseReceiveLogging => Volatile.Read(ref verboseReceiveLogging);
     public int OscPort => oscPort;
     public bool IncludeHierarchyAnimators => includeHierarchyAnimators;
     public string[] CustomComponentNamesToExpose => customComponentNamesToExpose;
@@ -239,6 +253,8 @@ public partial class OscQueryAnimationDebugger : MonoBehaviour
     void Update()
     {
         if (!_isPrimaryAvatarInstance) return;
+
+        _logLimiter.Flush();
 
         if (_configurationDirty)
         {
@@ -312,6 +328,11 @@ public partial class OscQueryAnimationDebugger : MonoBehaviour
         BroadcastChangedParameters();
     }
 
+    void OnDisable()
+    {
+        _logLimiter.Flush(true);
+    }
+
     void OnDestroy()
     {
         if (_isPrimaryAvatarInstance && s_activeAvatarRootId.HasValue && s_activeAvatarRootId.Value == transform.root.GetInstanceID())
@@ -353,6 +374,8 @@ public partial class OscQueryAnimationDebugger : MonoBehaviour
             _oscQueryService.Dispose();
             Debug.Log("[OSCQuery Animation Debugger] サービスを停止しました。");
         }
+
+        _logLimiter.Flush(true);
     }
 
     private void ForceCloseHttpListener()
@@ -373,7 +396,7 @@ public partial class OscQueryAnimationDebugger : MonoBehaviour
                 if (httpServer != null)
                 {
                     Type httpServerType = httpServer.GetType();
-                    
+
                     // HttpListener を探索（複数パターン対応）
                     FieldInfo listenerField = httpServerType.GetField(
                         "_listener",

@@ -41,7 +41,7 @@ public partial class OscQueryAnimationDebugger
 
             _lastBroadcastValues[oscPath] = currentValue;
 
-            if (verboseReceiveLogging)
+            if (ShouldLogVerbose("パラメーター変化"))
                 Debug.Log($"[OSCQuery Animation Debugger] 変化検知({driver.DisplayName}): {oscPath} = {currentValue}");
 
             byte[] packet = BuildOscPacketForParameter(oscPath, currentValue, paramInfo.Type);
@@ -88,12 +88,12 @@ public partial class OscQueryAnimationDebugger
             try
             {
                 _oscSendClient.Send(packet, packet.Length, kvpEndpoint.Value);
-                if (verboseReceiveLogging)
+                if (ShouldLogVerbose("OSC送信"))
                     Debug.Log($"[OSCQuery Animation Debugger] OSC送信: {oscPath} = {currentValue} -> {kvpEndpoint.Key}");
             }
             catch (Exception ex)
             {
-                Debug.LogWarning($"[OSCQuery Animation Debugger] OSC送信失敗 {kvpEndpoint.Key}: {ex.Message}");
+                LogWarningRepeated($"[OSCQuery Animation Debugger] OSC送信失敗 {kvpEndpoint.Key}: {ex.Message}");
             }
         }
     }
@@ -110,7 +110,7 @@ public partial class OscQueryAnimationDebugger
 
         if (message.Arguments.Length == 0 || !TryFormatScalarOscArgument(message.Arguments[0], out string rawValue))
         {
-            if (verboseReceiveLogging)
+            if (ShouldLogVerbose("scalar値の取得失敗", LogType.Warning))
                 Debug.LogWarning($"[OSCQuery Animation Debugger] scalar値を取得できません: {message.Address}");
             return;
         }
@@ -118,14 +118,14 @@ public partial class OscQueryAnimationDebugger
         string oscPath = message.Address;
         if (!TryExtractParameterName(oscPath, out string paramName))
         {
-            if (verboseReceiveLogging)
+            if (ShouldLogVerbose("未対応のOSCパス", LogType.Warning))
             {
                 Debug.LogWarning($"[OSCQuery Animation Debugger] 未対応のOSCパスを受信: {oscPath}");
             }
             return;
         }
 
-        if (verboseReceiveLogging)
+        if (ShouldLogVerbose("OSC値受信"))
         {
             Debug.Log($"[OSCQuery Animation Debugger] OSC値受信: parameter={paramName}, rawValue={rawValue}");
         }
@@ -143,7 +143,7 @@ public partial class OscQueryAnimationDebugger
             }
         }
 
-        if (!applied && verboseReceiveLogging)
+        if (!applied && ShouldLogVerbose("パラメーターの適用先なし", LogType.Warning))
         {
             Debug.LogWarning($"[OSCQuery Animation Debugger] パラメーター '{paramName}' を適用できるドライバーがありませんでした");
         }

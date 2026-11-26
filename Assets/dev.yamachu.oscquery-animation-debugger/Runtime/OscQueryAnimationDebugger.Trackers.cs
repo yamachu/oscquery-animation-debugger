@@ -84,7 +84,7 @@ public partial class OscQueryAnimationDebugger
 
         if (!TryGetTrackerVector(message.Arguments, out Vector3 value))
         {
-            if (verboseReceiveLogging)
+            if (ShouldLogVerbose("Tracker値の形式不正", LogType.Warning))
                 Debug.LogWarning($"[OSCQuery Animation Debugger] Tracker値はfloat/double/int/longの3引数が必要です: {message.Address}");
             return true;
         }
@@ -158,12 +158,12 @@ public partial class OscQueryAnimationDebugger
             }
             else
             {
-                Debug.LogWarning($"[OSCQuery Animation Debugger] Trackerエンドポイント登録失敗: {path}");
+                LogWarningRepeated($"[OSCQuery Animation Debugger] Trackerエンドポイント登録失敗: {path}");
             }
         }
         catch (Exception ex)
         {
-            Debug.LogWarning($"[OSCQuery Animation Debugger] Trackerエンドポイント登録失敗: {path} - {ex.Message}");
+            LogWarningRepeated($"[OSCQuery Animation Debugger] Trackerエンドポイント登録失敗: {path} - {ex.Message}");
         }
     }
 
